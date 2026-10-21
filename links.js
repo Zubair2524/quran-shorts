@@ -130,6 +130,13 @@ window.SHORTS = [
   "https://www.youtube.com/shorts/4lYNDFIpikM",
   "https://www.youtube.com/shorts/LROtCWp6YZc",
   "https://www.youtube.com/shorts/stcLrBwug9w",
+  "https://www.youtube.com/shorts/2gRIXcXm6J4",
+  "https://www.youtube.com/shorts/1kDmi4S2TQM",
+  "https://www.youtube.com/shorts/srP9YLeLXWw",
+  "https://www.youtube.com/shorts/srP9YLeLXWw|108",
+  "https://www.youtube.com/shorts/1kDmi4S2TQM|40",
+  "https://www.youtube.com/shorts/3KplOPaRHME|29",
+  "https://www.youtube.com/shorts/pbF7PRS4LBg|26",
   "https://www.youtube.com/shorts/eOTxjaVQ4FY"
 ];
 
