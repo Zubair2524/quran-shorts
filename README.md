@@ -55,16 +55,21 @@ window.LESSONS = [
 ```
 Links can be `youtube.com/shorts/...`, `youtu.be/...` or normal `watch?v=` links. Keep the quotes and commas.
 
-### C. From the page itself (owner tools)
-Open your site once with `?owner` on the end, e.g. `https://YOUR-USERNAME.github.io/quran-shorts/?owner`. Two buttons appear for you only: **✎ Manage** and **+ Add links**. Visitors never see them. Add `?owner=off` to hide them again.
-- **+ Add links**: paste one or many links, optionally type a topic, press **Add to page**. Thumbnails and titles appear straight away.
-- **✎ Manage**: change a card's topic, assign it to a Surah, or remove it.
-- These changes are saved **in your browser only**. To publish them for everyone, press **Copy links.js** in the Add dialog, open `links.js` on GitHub, select all, paste, and commit.
+### C. From the page itself (Admin button)
+Press **🔒 Admin** at the top right of the page and enter your password. The button turns gold and opens the admin tools:
+- **+ Add links**: paste one or many YouTube links, optionally type a topic, press **Add to page**. Thumbnails and titles appear straight away.
+- **✎ Manage mode**: buttons appear under every card. On a Surah card: **Replace video**, **Move to lessons**, **Remove** (an empty Surah has **+ Add video**). On a lesson card: change its topic, assign it to a Surah, or remove it. A blue **Manage mode on · Exit** button at the bottom left turns it off.
+- **Copy links.js** / **Copy videos.js**: copy a ready-made file to publish your changes. **Reset my changes** undoes everything done in this browser. **Lock admin** locks it again.
+- Admin stays unlocked until you close the tab. Tick *Keep me unlocked on this device* to stay unlocked on your own phone or computer.
+
+**Important:** Admin changes are saved **in your browser only**; other visitors do not see them yet. To publish them for everyone, press **Copy links.js**, open `links.js` on GitHub (pencil icon), select all, paste, and **Commit**. (You still add the actual video on YouTube; Admin only controls what the website shows.)
+
+**About the password:** it protects the editing tools from casual visitors, and it is stored in `index.html` only as a hash, never as plain text. It is a light lock, not bank-level security: a technically skilled person could work out a short numeric password from the hash. They still could not change the public site, because that only changes when `links.js` is updated on your GitHub account. To change the password: open your site, press F12 → Console, type `adminHash('your new password')` and press Enter, then replace the long text in `ADMIN_HASH` near the top of the script in `index.html` with the result. A longer password is safer.
 
 ## 4. How thumbnails and details work
 
 - The thumbnail is loaded straight from YouTube using the video id. The page tries the best size first, then smaller ones, and ignores YouTube's tiny grey "no thumbnail" image. If YouTube has no image at all, the Surah card keeps its Arabic artwork and lesson cards show a neutral play placeholder.
-- Titles and channel names are saved in `videos.js` by the auto-sync, so the page opens instantly. If a video is not in `videos.js` yet (for example one you just added with the owner tools), the browser looks the title up by itself.
+- Titles and channel names are saved in `videos.js` by the auto-sync, so the page opens instantly. If a video is not in `videos.js` yet (for example one you just added with Admin), the browser looks the title up by itself.
 - Shorts are shown as tall posters and normal videos as wide ones. The sync detects which is which.
 
 ## 5. Hide a video

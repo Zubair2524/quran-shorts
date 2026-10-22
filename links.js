@@ -139,6 +139,9 @@ window.SHORTS = [
   "https://www.youtube.com/shorts/pbF7PRS4LBg|26",
   "https://www.youtube.com/shorts/0OUTefkON3s|103",
   "https://www.youtube.com/shorts/27e89wiOkPA|27",
+  "https://www.youtube.com/shorts/61-UkpaXDWY|24",
+  "https://www.youtube.com/shorts/3KplOPaRHME|29",
+  "https://www.youtube.com/shorts/pYYzt5P9QEo|9",
   "https://www.youtube.com/shorts/eOTxjaVQ4FY"
 ];
 
