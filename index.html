@@ -616,13 +616,20 @@ const FAILED = new Set();
 let items = [];     // all videos
 let lessons = [];   // videos not assigned to a Surah
 function buildItems(){
-  const seen = new Set(), hidden = new Set(HIDE); items = [];
+  const hidden = new Set(HIDE), byVid = {}; items = [];
   (window.HIDDEN||[]).forEach(u=>{ const v = videoId(u) || (/^[\w-]{11}$/.test(String(u)) ? String(u) : null); if(v) hidden.add(v); });
   RAW.forEach(s=>{ s.vid=null; s.url=''; s.item=null; });
   const push = (url,topic,hint,src)=>{
-    const vid = videoId(url); if(!vid || seen.has(vid) || hidden.has(vid)) return;
-    seen.add(vid); const b = BAKED[vid]||{};
-    items.push({vid,url,short: typeof b.s==='boolean' ? b.s : isShort(url), topic:topic||'', hint:hint||'', src, auto:src==='auto', pub:b.p||''});
+    const vid = videoId(url); if(!vid || hidden.has(vid)) return;
+    if(byVid[vid]){                                   // listed twice: merge them; an explicit |number or topic wins
+      const e = byVid[vid];
+      if(hint && (!e.hint || /^\d{1,3}$/.test(hint))) e.hint = hint;
+      if(topic && !e.topic) e.topic = topic;
+      return;
+    }
+    const b = BAKED[vid]||{};
+    const it = {vid,url,short: typeof b.s==='boolean' ? b.s : isShort(url), topic:topic||'', hint:hint||'', src, auto:src==='auto', pub:b.p||''};
+    byVid[vid] = it; items.push(it);
   };
   (window.SHORTS||[]).forEach(e=>{
     if(typeof e==='string'){ const p=e.split('|'); push(p[0].trim(),'',p.slice(1).join('|').trim(),'file'); }
@@ -636,18 +643,24 @@ function buildItems(){
     const ov = OV[it.vid]||{}, meta = getMeta(it.vid);
     it.title = meta?meta.t:''; it.author = meta?meta.a:''; it.failed = !meta && FAILED.has(it.vid);
     if(ov.topic!=null) it.topic = ov.topic;
-    let n = ov.n ? +ov.n : null;
+    let n = ov.n ? +ov.n : null, explicit = !!n;
     if(!n && !it.topic){
-      if(/^\d{1,3}$/.test(it.hint)) n = +it.hint;
+      if(/^\d{1,3}$/.test(it.hint)){ n = +it.hint; explicit = true; }
       else if(it.hint) n = matchTitle(it.hint);
       if(!n && it.title) n = matchTitle(it.title);
     }
-    if(n>=1 && n<=114){
+    it._n = (n>=1 && n<=114) ? n : null; it._x = explicit;
+  });
+  const place = it=>{
+    const n = it._n;
+    if(n){
       const s = RAW[n-1];
       if(s.vid && s.vid!==it.vid){ it.topic = it.topic||'More Surah videos'; it.dupe=true; }
       else { s.vid=it.vid; s.url=it.url; s.item=it; it.n=n; }
     } else if(!it.topic) it.topic = it.auto ? 'New uploads' : 'Unsorted';
-  });
+  };
+  items.filter(i=>i._x).forEach(place);      // links with an explicit |number claim their Surah first
+  items.filter(i=>!i._x).forEach(place);     // then the ones matched from their titles
   lessons = items.filter(i=>!i.n).sort((a,b)=>(b.pub||'').localeCompare(a.pub||''));
   setNum($('avail'), RAW.filter(s=>s.vid).length);
   setNum($('nless'), lessons.length);
